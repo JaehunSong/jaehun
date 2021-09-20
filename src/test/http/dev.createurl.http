@@ -1,0 +1,8 @@
+### Send POST request with json body
+POST http://localhost:8080/testsearch
+Content-Type: application/json
+
+{
+  "url" : "http://ncov.mohw.go.kr/bdBoardList_Real.do?brdId=1&brdGubun=13",
+  "context" : "test"
+}
