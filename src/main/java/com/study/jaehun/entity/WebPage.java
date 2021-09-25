@@ -16,7 +16,7 @@ public class WebPage {
     protected long id;
 
     private String title;
-
+    @Column(unique = true)
     private String url;
     @Lob
     private String description;

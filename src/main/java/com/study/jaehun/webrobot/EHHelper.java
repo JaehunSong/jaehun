@@ -1,35 +1,68 @@
 package com.study.jaehun.webrobot;
 
 public class EHHelper {
-    static public void EmitTagAndSpacialCh(String str){
-        String
+    static public String EmitTagAndSpacialCh(String str){
+        str = EHHelper.RemoveTag(str);
+        str = EHHelper.RemoveHtmlSpecialCh(str);
+        str = EHHelper.RemoveSymbol(str);
+        return str;
     }
 
-    static public String RemoveTag(String str){
+    static public String RemoveTag(String src){
         try{
             while (true){
-                String[] str1 = EHHelper.FindTag(str);
-                if (str1[0])
+                int[] num = EHHelper.FindTag(src);
+                if (num[0] < num[1]){
+                    src = src.substring(0,num[0]) + src.substring(num[1]+1);
+                }else {
+                    src = src.substring(0, num[1]) + src.substring(num[1]+1);
+                }
             }
         }catch (Exception e){
-
+            return src;
         }
-        return "";
     }
 
-    static public String[] FindTag(String str){
-        return new String[]{"",""};
+    static public int[] FindTag(String str){
+        int[] num = {0,0};
+        num[0] = str.indexOf("<");
+        num[1] = str.indexOf(">");
+        return num;
     }
 
-    static public void RemoveSymbol(String src){
-
+    static public String RemoveSymbol(String src){
+        String dest = "";
+        String[] splitSrc = src.split("");
+        for ( String elem : splitSrc) {
+            boolean isNumeric = elem.chars().allMatch( Character::isDigit );
+            if (!isNumeric || elem.matches(" ")){
+                dest += elem;
+            } else{
+                dest += " ";
+            }
+        }
+        return dest;
     }
 
-    static public void RemoveHtmlSpecialCh(String str){
-
+    static public String RemoveHtmlSpecialCh(String src){
+        try{
+            while (true){
+                int[] num = EHHelper.FindHtmlSpecialCh(src);
+                if (num[0] < num[1]){
+                    src = src.substring(0,num[0]) + src.substring(num[1]+1);
+                }else {
+                    src = src.substring(0, num[1]) + src.substring(num[1]+1);
+                }
+            }
+        }catch (Exception e){
+            return src;
+        }
     }
 
-    static public void FindHtmlSpecialCh(String src){
-
+    static public int[] FindHtmlSpecialCh(String src){
+        int[] num = {0,0};
+        num[0] = src.indexOf("&");
+        num[1] = src.indexOf(";");
+        return num;
     }
 }
