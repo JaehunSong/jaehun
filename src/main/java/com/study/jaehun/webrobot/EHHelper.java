@@ -31,17 +31,17 @@ public class EHHelper {
     }
 
     static public String RemoveSymbol(String src){
-        String dest = "";
+        StringBuilder dest = new StringBuilder();
         String[] splitSrc = src.split("");
         for ( String elem : splitSrc) {
             boolean isNumeric = elem.chars().allMatch( Character::isDigit );
             if (!isNumeric || elem.matches(" ")){
-                dest += elem;
+                dest.append(elem);
             } else{
-                dest += " ";
+                dest.append(" ");
             }
         }
-        return dest;
+        return dest.toString();
     }
 
     static public String RemoveHtmlSpecialCh(String src){

@@ -16,16 +16,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class WebRobotController {
     private final WebRobotService webRobotService;
-
-    // 생성 메소드
-    @GetMapping("/testsearch")
-    public WebRobotUrl.Response urlTest() throws IOException {
-        return webRobotService.getUrlDetail();
+    @GetMapping("/test")
+    public String test() throws IOException {
+        return webRobotService.getPrice("https://tres-bien.com/dries-van-noten-heyze-pr-printed-top-black-212-021199-3221-900-fw21");
     }
-
-    @GetMapping("/addseedsite")
-    public void Addsite(){
-        webRobotService.AddCandidate("https://tres-bien.com/",0);
-    }
-
 }

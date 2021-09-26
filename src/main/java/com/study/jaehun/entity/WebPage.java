@@ -20,6 +20,6 @@ public class WebPage {
     private String url;
     @Lob
     private String description;
-
+    private String price;
     private Integer mcnt;
 }

@@ -1,11 +1,8 @@
 package com.study.jaehun.service;
 
 import com.study.jaehun.dto.CandidateDto;
-import com.study.jaehun.dto.DeveloperDetailDto;
-import com.study.jaehun.dto.WebRobotUrl;
 import com.study.jaehun.entity.Candidate;
 import com.study.jaehun.entity.WebPage;
-import com.study.jaehun.exception.DMakerException;
 import com.study.jaehun.repository.CandidateRepository;
 import com.study.jaehun.repository.WebRobotRepository;
 import com.study.jaehun.webrobot.EHHelper;
@@ -23,9 +20,6 @@ import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
-
-import static com.study.jaehun.exception.DMakerErrorCode.NO_DEVELOPER;
 
 @Service
 @Slf4j
@@ -35,14 +29,18 @@ public class WebRobotService {
     private final CandidateRepository candidateRepository;
     @Async
     @Transactional
-    @Scheduled(fixedRateString = "10000", initialDelay = 10000)
-    public WebRobotUrl.Response getUrlDetail() throws IOException {
+    @Scheduled(fixedRateString = "5000", initialDelay = 5000)
+    public void getUrlDetail() throws IOException {
         CandidateDto candidateDto = getCandidate();
         int depth = candidateDto.getDepth();
         String url = candidateDto.getUrl();
         Document doc = getDoc(url);
         String title = doc.title();
         Elements atags = doc.select("a[href]");
+        String price = "";
+        if (doc.getElementsByTag("span").hasClass("price")){
+            price = doc.getElementsByTag("span").select(".price").get(0).text();
+        }
         ArrayList<String> links = getLinks(atags);
         for (String link : links) {
             Candidate candi = candidateRepository.findByUrl(link).orElse(null);
@@ -55,14 +53,11 @@ public class WebRobotService {
                     .url(url)
                     .title(EHHelper.EmitTagAndSpacialCh(title))
                     .description(EHHelper.EmitTagAndSpacialCh(doc.text()))
+                    .price(price)
                     .mcnt(0)
                     .build();
             webRobotRepository.save(webPage);
-            return WebRobotUrl.Response.fromEntity(webPage);
-        } else{
-            getUrlDetail();
         }
-        return null;
     }
 
 
@@ -75,12 +70,16 @@ public class WebRobotService {
         candidateRepository.save(candidate);
     }
 
-
-    public void removeCandidate(String url) throws IOException {
-        Candidate candidate = candidateRepository.findByUrl(url)
-                .orElseThrow(()-> new IOException());
-        candidateRepository.delete(candidate);
+    @PostConstruct
+    public void startCrawler(){
+        AddCandidate("https://tres-bien.com",0);
     }
+//
+//    public void removeCandidate(String url) throws IOException {
+//        Candidate candidate = candidateRepository.findByUrl(url)
+//                .orElseThrow(()-> new IOException());
+//        candidateRepository.delete(candidate);
+//    }
 
     @Transactional
     public CandidateDto getCandidate() throws IOException {
@@ -88,23 +87,29 @@ public class WebRobotService {
         Candidate candidate = candidateRepository.findById(candidateRepository.getMinId()).orElse(null);
         if (candidate != null){
             url = candidate.getUrl();
-            System.out.println("캔디데이트 가져오기 완료");
         }
         CandidateDto candidateDto =  candidateRepository.findByUrl(url) // Entity 가져오기
                 .map(CandidateDto::fromEntity) // Entity를 Dto로 매핑
-                .orElseThrow(()-> new IOException()); // 실패했다면 exception 발생
+                .orElseThrow(IOException::new); // 실패했다면 exception 발생
+        assert candidate != null;
         candidateRepository.delete(candidate);
-        System.out.println("캔디데이트 삭제 완료");
         return  candidateDto;
     }
 
     public static Document getDoc(String url) throws IOException {
 
-        Document doc = Jsoup.connect(url).get();
-        return doc;
+        return Jsoup.connect(url).get();
 
     }
 
+    public String getPrice(String url) throws IOException {
+        Document doc = getDoc(url);
+        String price = "None";
+        if (doc.getElementsByTag("span").hasClass("price")){
+            price = doc.getElementsByTag("span").select(".price").get(0).text();
+        }
+        return price;
+    }
 
     public ArrayList<String> getLinks(Elements atags){
         ArrayList<String> link = new ArrayList<String>();
