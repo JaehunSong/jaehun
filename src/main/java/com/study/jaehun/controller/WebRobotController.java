@@ -18,8 +18,8 @@ import java.io.IOException;
 public class WebRobotController {
     private final WebRobotService webRobotService;
     private final SearchService searchService;
-    @GetMapping("/test")
-    public void test() throws IOException {
-        searchService.searchWebpageTest("jacket");
+    @GetMapping("/test/{keyword}")
+    public void test(@PathVariable String keyword) throws IOException {
+        searchService.searchWebpageTest(keyword);
     }
 }
