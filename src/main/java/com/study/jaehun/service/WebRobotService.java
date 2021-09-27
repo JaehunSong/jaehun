@@ -33,9 +33,9 @@ import static com.study.jaehun.exception.DMakerErrorCode.NO_DEVELOPER;
 public class WebRobotService {
     private final WebRobotRepository webRobotRepository;
     private final CandidateRepository candidateRepository;
-    @Async
-    @Transactional
-    @Scheduled(fixedRateString = "10000", initialDelay = 10000)
+    @Async // 비동기 처리
+    @Transactional // 트랜잰션 처리
+    @Scheduled(fixedRateString = "10000", initialDelay = 10000) // 스케줄러 사용
     public WebRobotUrl.Response getUrlDetail() throws IOException {
         CandidateDto candidateDto = getCandidate();
         int depth = candidateDto.getDepth();
