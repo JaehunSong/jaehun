@@ -36,7 +36,7 @@ public class WebRobotService {
     @Async // 비동기 처리
     @Transactional // 트랜잰션 처리
     @Scheduled(fixedRateString = "10000", initialDelay = 10000) // 스케줄러 사용
-    public WebRobotUrl.Response getUrlDetail() throws IOException {
+    public void collectUrl() throws IOException {
         CandidateDto candidateDto = getCandidate();
         int depth = candidateDto.getDepth();
         String url = candidateDto.getUrl();
@@ -63,11 +63,7 @@ public class WebRobotService {
                     .mcnt(0)
                     .build();
             webRobotRepository.save(webPage);
-            return WebRobotUrl.Response.fromEntity(webPage);
-        } else{
-            getUrlDetail();
         }
-        return null;
     }
 
 
