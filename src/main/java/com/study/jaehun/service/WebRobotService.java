@@ -1,11 +1,8 @@
 package com.study.jaehun.service;
 
 import com.study.jaehun.dto.CandidateDto;
-import com.study.jaehun.dto.DeveloperDetailDto;
-import com.study.jaehun.dto.WebRobotUrl;
 import com.study.jaehun.entity.Candidate;
 import com.study.jaehun.entity.WebPage;
-import com.study.jaehun.exception.DMakerException;
 import com.study.jaehun.repository.CandidateRepository;
 import com.study.jaehun.repository.WebRobotRepository;
 import com.study.jaehun.webrobot.EHHelper;
@@ -23,9 +20,6 @@ import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
-
-import static com.study.jaehun.exception.DMakerErrorCode.NO_DEVELOPER;
 
 @Service
 @Slf4j
@@ -108,17 +102,17 @@ public class WebRobotService {
 
     }
 
-    public String getPrice(String url) throws IOException {
-        Document doc = getDoc(url);
-        String price = "None";
-        if (doc.getElementsByTag("span").hasClass("price")){
-            price = doc.getElementsByTag("span").select(".price").get(0).text();
-        }
-        return price;
-    }
+//    public String getPrice(String url) throws IOException {
+//        Document doc = getDoc(url);
+//        String price = "None";
+//        if (doc.getElementsByTag("span").hasClass("price")){
+//            price = doc.getElementsByTag("span").select(".price").get(0).text();
+//        }
+//        return price;
+//    }
 
     public ArrayList<String> getLinks(Elements atags){
-        ArrayList<String> link = new ArrayList<String>();
+        ArrayList<String> link = new ArrayList<>();
 
         for (Element atag : atags
              ) {
