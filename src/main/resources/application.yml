@@ -14,4 +14,6 @@ spring:
           backend:
             directoroy:
               root: C:/filesystem/path
+            analysis:
+              configurer: class:com.study.jaehun.MyLuceneAnalysisConfigurer
 

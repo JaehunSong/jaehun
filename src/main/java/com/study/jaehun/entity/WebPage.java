@@ -18,7 +18,7 @@ public class WebPage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
-    @FullTextField
+    @FullTextField(analyzer = "english")
     private String title;
     @Column(unique = true)
     private String url;
