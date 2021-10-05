@@ -1,8 +1,9 @@
 package com.study.jaehun.entity;
 
 import lombok.*;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 
 import javax.persistence.*;
 
@@ -17,12 +18,12 @@ public class WebPage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
-    @Field
+    @FullTextField
     private String title;
     @Column(unique = true)
     private String url;
     @Lob
-    @Field
+    @FullTextField
     private String description;
     private String price;
     private Integer mcnt;

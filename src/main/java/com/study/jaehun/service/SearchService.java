@@ -8,7 +8,6 @@ import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Service;
-import org.apache.lucene.search.Query;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
