@@ -23,7 +23,7 @@ public class WebPage {
     @Column(unique = true)
     private String url;
     @Lob
-    @FullTextField
+    @FullTextField(analyzer = "english")
     private String description;
     private String price;
     private Integer mcnt;

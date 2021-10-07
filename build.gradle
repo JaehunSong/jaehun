@@ -32,6 +32,8 @@ dependencies {
 	implementation 'org.hibernate.search:hibernate-search-backend-lucene:6.0.6.Final'
 	// https://mvnrepository.com/artifact/javax/javaee-api
 	compileOnly 'javax:javaee-api:8.0.1'
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation 'org.json:json:20210307'
 
 }
 

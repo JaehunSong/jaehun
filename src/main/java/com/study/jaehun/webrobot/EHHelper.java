@@ -4,7 +4,7 @@ public class EHHelper {
     static public String EmitTagAndSpacialCh(String str){
         str = EHHelper.RemoveTag(str);
         str = EHHelper.RemoveHtmlSpecialCh(str);
-        str = EHHelper.RemoveSymbol(str);
+//        str = EHHelper.RemoveSymbol(str);
         return str;
     }
 
@@ -30,19 +30,19 @@ public class EHHelper {
         return num;
     }
 
-    static public String RemoveSymbol(String src){
-        StringBuilder dest = new StringBuilder();
-        String[] splitSrc = src.split("");
-        for ( String elem : splitSrc) {
-            boolean isNumeric = elem.chars().allMatch( Character::isDigit );
-            if (!isNumeric || elem.matches(" ")){
-                dest.append(elem);
-            } else{
-                dest.append(" ");
-            }
-        }
-        return dest.toString();
-    }
+//    static public String RemoveSymbol(String src){
+//        StringBuilder dest = new StringBuilder();
+//        String[] splitSrc = src.split("");
+//        for ( String elem : splitSrc) {
+//            boolean isNumeric = elem.chars().allMatch( Character::isDigit );
+//            if (!isNumeric || elem.matches(" ")){
+//                dest.append(elem);
+//            } else{
+//                dest.append(" ");
+//            }
+//        }
+//        return dest.toString();
+//    }
 
     static public String RemoveHtmlSpecialCh(String src){
         try{
