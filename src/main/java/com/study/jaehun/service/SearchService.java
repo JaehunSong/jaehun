@@ -8,6 +8,7 @@ import org.apache.lucene.search.Explanation;
 import org.hibernate.search.backend.lucene.LuceneExtension;
 import org.hibernate.search.backend.lucene.search.query.LuceneSearchQuery;
 import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.engine.search.sort.dsl.SearchSortFactory;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Service;
@@ -32,15 +33,19 @@ public class SearchService {
         SearchSession searchSession = Search.session( entityManager );
         // WebPage entity에 mapping된 index에서 search query를 시작
         SearchResult<WebPage> result = searchSession.search(WebPage.class)
-                .where( f -> f.match()
-                        .fields( "title", "description" )
-                        .matching(keyword)
-                        .fuzzy(1))
-                .fetch( 20 );
+                .where( f -> f.bool()
+                        .must(f.exists().field( "brand" ))
+                        .must(f.match()
+                                .field("brand").boost(2f)
+                                .fields( "title", "description" )
+                                .matching(keyword)
+                                .fuzzy(1)))
+                .sort(SearchSortFactory::score)
+                .fetch( 20);
         long totalHitCount = result.total().hitCount();
 
-        log.info(String.valueOf(totalHitCount));
-
+        log.info("히트 카운트"+totalHitCount);
+        log.info("result : "+result.hits().get(0).getDescription());
         return result.hits();
     }
 
@@ -48,9 +53,13 @@ public class SearchService {
         List<WebPage> webPages = searchWebpage(keyword);
         log.info("객체 크기 : "+ webPages.size());
         for(WebPage webPage : webPages) {
-            log.info("\n제목 : {}\n가격 : {}\n---------------------------------\n"
+            log.info("\n제목 : {}\n가격 : {}\n이미지링크 : {}\n설명 : {}\n상세 : {}\n브랜드 : {}\n---------------------------------\n"
                     , webPage.getTitle()
-                    , webPage.getPrice());
+                    , webPage.getPrice()
+                    , webPage.getImg()
+                    , webPage.getDescription()
+                    , webPage.getDetail()
+                    , webPage.getBrand());
         }
         log.info("==========================   종료   =========================");
     }

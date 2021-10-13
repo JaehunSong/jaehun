@@ -5,6 +5,7 @@ import com.study.jaehun.entity.Candidate;
 import com.study.jaehun.entity.WebPage;
 import com.study.jaehun.repository.CandidateRepository;
 import com.study.jaehun.repository.WebRobotRepository;
+import com.study.jaehun.seedsite.Tresbien;
 import com.study.jaehun.webrobot.EHHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,18 +30,15 @@ public class WebRobotService {
     private final CandidateRepository candidateRepository;
     @Async // 비동기 처리
     @Transactional // 트랜잰션 처리
-    @Scheduled(fixedRateString = "10000", initialDelay = 10000) // 스케줄러 사용
+    @Scheduled(fixedRateString = "3000", initialDelay = 5000) // 스케줄러 사용
     public void collectUrl() throws IOException {
         CandidateDto candidateDto = getCandidate();
         int depth = candidateDto.getDepth();
         String url = candidateDto.getUrl();
         Document doc = getDoc(url);
-        String title = doc.title();
+
         Elements atags = doc.select("a[href]");
-        String price = "";
-        if (doc.getElementsByTag("span").hasClass("price")){
-            price = doc.getElementsByTag("span").select(".price").get(0).text();
-        }
+
         ArrayList<String> links = getLinks(atags);
         for (String link : links) {
             Candidate candi = candidateRepository.findByUrl(link).orElse(null);
@@ -48,17 +46,25 @@ public class WebRobotService {
                 AddCandidate(link,depth+1);
             }
         }
-        if (webRobotRepository.findByUrl(url).orElse(null) == null){
-            WebPage webPage = WebPage.builder()
-                    .url(url)
-                    .title(EHHelper.EmitTagAndSpacialCh(title))
-                    .description(EHHelper.EmitTagAndSpacialCh(doc.text()))
-                    .price(price)
-                    .mcnt(0)
-                    .build();
-            webRobotRepository.save(webPage);
+
+        if (url.contains("tres-bien.com")){
+            Tresbien tresbien = new Tresbien(doc);
+            if (webRobotRepository.findByUrl(url).orElse(null) == null){
+                WebPage webPage = WebPage.builder()
+                        .url(url)
+                        .title(EHHelper.EmitTagAndSpacialCh(tresbien.getTitle()))
+                        .description(EHHelper.EmitTagAndSpacialCh(tresbien.getDescription()))
+                        .price(tresbien.getPrice())
+                        .img(tresbien.getImg())
+                        .detail(tresbien.getDetail())
+                        .brand(tresbien.getBrand())
+                        .build();
+                webRobotRepository.save(webPage);
+            }
         }
+
     }
+
 
 
     @Transactional
@@ -123,8 +129,9 @@ public class WebRobotService {
                 } catch (Exception e) {
                     continue;
                 }
-                link.add(ExtractionUrl(atag2));
-
+                if (atag2.contains("tres-bien.com")){
+                    link.add(ExtractionUrl(atag2));
+                }
             }
         }
 

@@ -34,13 +34,11 @@ public class WebRobotUrl {
         private String url;
         private String title;
         private String description;
-        private Integer mcnt;
         public static WebRobotUrl.Response fromEntity(WebPage webPage){
             return Response.builder()
                     .url(webPage.getUrl())
                     .title(webPage.getTitle())
                     .description(webPage.getDescription())
-                    .mcnt(webPage.getMcnt())
                     .build();
         }
     }

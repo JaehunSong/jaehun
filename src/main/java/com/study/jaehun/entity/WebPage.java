@@ -3,6 +3,7 @@ package com.study.jaehun.entity;
 import lombok.*;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 
 import javax.persistence.*;
@@ -25,6 +26,11 @@ public class WebPage {
     @Lob
     @FullTextField(analyzer = "english")
     private String description;
+
     private String price;
-    private Integer mcnt;
+    private String img;
+    @Lob
+    private String detail;
+    @KeywordField
+    private String brand;
 }
