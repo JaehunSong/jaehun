@@ -2,12 +2,10 @@ package com.study.jaehun.dto;
 
 import com.study.jaehun.entity.WebPage;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 
-public class WebRobotUrl {
+public class WebpageDto {
     @Getter
     @Setter
     @NoArgsConstructor
@@ -34,7 +32,7 @@ public class WebRobotUrl {
         private String url;
         private String title;
         private String description;
-        public static WebRobotUrl.Response fromEntity(WebPage webPage){
+        public static WebpageDto.Response fromEntity(WebPage webPage){
             return Response.builder()
                     .url(webPage.getUrl())
                     .title(webPage.getTitle())

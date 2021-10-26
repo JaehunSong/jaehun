@@ -3,10 +3,6 @@ package com.study.jaehun.service;
 
 import com.study.jaehun.entity.WebPage;
 import lombok.extern.slf4j.Slf4j;
-
-import org.apache.lucene.search.Explanation;
-import org.hibernate.search.backend.lucene.LuceneExtension;
-import org.hibernate.search.backend.lucene.search.query.LuceneSearchQuery;
 import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.engine.search.sort.dsl.SearchSortFactory;
 import org.hibernate.search.mapper.orm.Search;

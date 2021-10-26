@@ -16,8 +16,8 @@ public class AsyncConfig extends AsyncConfigurerSupport {
     @Override
     public Executor getAsyncExecutor(){
         ThreadPoolTaskExecutor asyncExecutor = new ThreadPoolTaskExecutor();
-        asyncExecutor.setCorePoolSize(2); //현재 동작하는 Async Thread 수
-        asyncExecutor.setMaxPoolSize(3);  //최대 동작하는 Async Thread 수
+        asyncExecutor.setCorePoolSize(10); // thread의 코어 수를 설정
+        asyncExecutor.setMaxPoolSize(15);  //최대 동작하는 Async Thread 수
         asyncExecutor.setQueueCapacity(10); // 최대 동작 Thread를 초과할 시, 보관되는 Queue의 수
         asyncExecutor.setThreadNamePrefix("TESTAsync-");  // Async Thread가 동작할 때 표시되는 Thread Name
         asyncExecutor.initialize();  //위 설정의
