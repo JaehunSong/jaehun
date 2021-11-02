@@ -13,7 +13,7 @@ spring:
         search:
           backend:
             directoroy:
-              root: C:/filesystem/path
+              root: /path/to/my/root
             analysis:
               configurer: class:com.study.jaehun.MyLuceneAnalysisConfigurer
 

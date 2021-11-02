@@ -21,7 +21,22 @@ public class SearchService {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager entityManager;
 
-
+    public SearchService(EntityManager entityManager) {
+        super();
+        this.entityManager = entityManager;
+    }
+    public void buildSearchIndex() throws InterruptedException {
+        SearchSession searchSession = Search.session( entityManager );;
+        searchSession.massIndexer()
+                .start()
+                .thenRun(() -> {
+                    log.info( "Mass indexing succeeded!" );
+                })
+                .exceptionally( throwable -> {
+                    log.error( "Mass indexing failed!", throwable );
+                    return null;
+                } );
+    }
 
     public List<WebPage> searchWebpage(String keyword) {
         // 쿼리 준비 및 실행 workflow
@@ -30,7 +45,7 @@ public class SearchService {
         // WebPage entity에 mapping된 index에서 search query를 시작
         SearchResult<WebPage> result = searchSession.search(WebPage.class)
                 .where( f -> f.bool()
-                        .must(f.exists().field( "brand" ))
+                        .filter(f.exists().field( "brand" ))
                         .must(f.match()
                                 .field("brand").boost(2f)
                                 .fields( "title", "description" )
